@@ -1,46 +1,58 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import styles from './index.module.css'
+import Origam from '../origam'
+
+
+
+import 'firebase/database';
+
 
 class Origami extends Component {
-    constructor(props) {
-        super(props)
+  constructor(props) {
+    super(props)
 
-        this.state = {
-            origami: []
-        }
+    this.state = {
+      origami: []
     }
-    getOrigami = async () => {
-        const promise = await fetch('http://localhost:9999/api/origami')
-        const origami= await promise.json()
+  }
+  getOrigami = async () => {
+      const {length} = this.props
+    const promise = await fetch(`https://myblogproject-4573a-default-rtdb.europe-west1.firebasedatabase.app?length=${length}`)
+    const origami = await promise.json()
 
-        this.setState({
-            origami
-        })
-    }
-    renderOrigami(){
-        const {origami} = this.state
-        return origami.map(origam => {
-            return (
-                <Origam key={origam._id}{...origam}/>
-                  
-            )
-        })
-    }
-    componentDidMount(){
-        this.getOrigami()
-    }
-    render(){
-        console.log(this.state.origami)
-     
-        return (
-            <div className={styles.container}>
-                <h1 className={styles.title}>Origami</h1>
-                <div className={styles["origami-wrapper"]}>
-                {this.renderOrigami()}
-                </div>
-            </div>
-        )
-        }
+    this.setState({
+      origami
+    })
+
+  }
+  renderOrigami() {
+    const { origami } = this.state
+    return origami.map((origam, index) => {
+      return (
+        <Origam key={origam._id} index={index} {...origam} />
+
+      )
+    })
+  }
+  componentDidMount() {
+    this.getOrigami()
+  }
+  render() {
+       /* console.log(this.state.origami)
+     */  return (
+      
+          <div className={styles["origami-wrapper"]}>
+            {this.renderOrigami()}
+          </div>
+        
+   
+    )
+  }
 }
 
-export default Origami
+
+
+
+
+
+  export default Origami;
