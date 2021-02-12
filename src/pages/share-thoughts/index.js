@@ -15,7 +15,7 @@ const ShareThoughtsPage = () => {
         <Title title="Share your thoughts..."/>
         <div>
 
-        <textarea className={styles.textarea}>Publication..</textarea>
+        <textarea className={styles.textarea} defaultValue="Publication..."/>
         </div>
         <div>
 

@@ -1,6 +1,6 @@
-const getNavigation = (userid) => {
+const getNavigation = (loggedIn, user) => {
 
-const links = [
+const authLinks = [
     {
     title: "Publications",
     link:"/"
@@ -11,7 +11,7 @@ const links = [
 },
 {
     title: "Profile",
-    link:`/profile/${userid}`
+    link:`/profile/${user && user.id}`
 },
 {
     title: "Register",
@@ -23,8 +23,22 @@ const links = [
 }
 
 ]
+const guestLinks = [
+    {
+    title: "Publications",
+    link:"/"
+},
+{
+    title: "Register",
+    link:"/register"
+},
+{
+    title: "Login",
+    link:"/login"
+}
 
-return links
+]
+return loggedIn ? authLinks : guestLinks
 
 }
 
