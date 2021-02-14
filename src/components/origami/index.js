@@ -1,53 +1,47 @@
-import React, { Component } from 'react'
+import React, { useState, useCallback, useEffect, useMemo, useContext } from 'react'
 import styles from './index.module.css'
 import Origam from '../origam'
+import getOrigami from '../../utils/origami'
+import UserContext from '../../Context'
+
+const Origami =(props) => {
+  const context = useContext(UserContext)
+const [origami, setOrigami] =(context.origamis || [])
+
+const getOrigami = useCallback(async () => {
+const origami = await getOrigami(props.length)
+setOrigami(origami)
+}, [props.length])
 
 
 
-import 'firebase/database';
+const renderOrigami = useMemo(()=> {
+ 
+  return origami.map((origam, index) => {
+    return (
+      <Origam key={origam._id} index={index} {...origam} />
 
-
-class Origami extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      origami: []
-    }
-  }
-  getOrigami = async () => {
-      const {length} = this.props
-    const promise = await fetch(`https://myblogproject-4573a-default-rtdb.europe-west1.firebasedatabase.app?length=${length}`)
-    const origami = await promise.json()
-
-    this.setState({
-      origami
-    })
-
-  }
-  renderOrigami() {
-    const { origami } = this.state
-    return origami.map((origam, index) => {
-      return (
-        <Origam key={origam._id} index={index} {...origam} />
-
-      )
-    })
-  }
-  componentDidMount() {
-    this.getOrigami()
-  }
-  render() {
-       /* console.log(this.state.origami)
-     */  return (
-      
-          <div className={styles["origami-wrapper"]}>
-            {this.renderOrigami()}
-          </div>
-        
-   
     )
-  }
+  })
+},[origami])
+
+useEffect(() => {
+  getOrigami()
+}, [props.updatedOrigami, getOrigami])
+
+
+
+
+  return (
+      
+    <div className={styles["origami-wrapper"]}>
+      {renderOrigami()}
+    </div>
+  
+
+)
+
+
 }
 
 
