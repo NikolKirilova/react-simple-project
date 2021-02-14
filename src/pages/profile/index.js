@@ -1,42 +1,39 @@
-import React, { Component} from 'react'
+import React, { useContext, useEffect, useState, useCallback} from 'react'
+import {useParams, useHistory} from 'react-router-dom'
 import PageWrapper from '../../components/page-wrapper'
 import Origami from '../../components/origami'
+import UserContext from '../../Context'
 
-class ProfilePage extends Component {
-
-    constructor(props){
-        super(props)
-
-
-        this.state = {
-            username: null,
-            posts: null 
+const ProfilePage = () => {
+        const [username, setUsername] = useState(null)
+        const [posts, setPosts] = useState(null)
+        const context = useContext(UserContext)
+        const params = useParams()
+        const history = useHistory()
+        
+        const logOut =() =>{
+            context.logOut()
+            history.push('/')
         }
-    }
 
-componentDidMount(){
-     this.getUser(this.props.match.params.userid)
-}
+        const getData = useCallback(async() => {
+            const id = params.userid
+            const response = await fetch('http://localhost:9999/api/user?id=${id}')
 
-getUser = async(id) => {
-    const response = await fetch('http://localhost:9999/api/user?id=${id}')
+            if(!response.ok){
+                history.push('/error')
+            }else {
+        
+            const user = await response.json()
+            setUsername(user.username)
+            setPosts(user.posts && user.posts.length)
+            }
+        },[params.user.id, history])
 
-    if(!response.ok){
-        this.props.history.push('/error')
-    }
-
-    const user = await response.json()
-    this.setState({
-        username: user.username,
-        posts: user.posts && user.posts.length
-    })
-}
-
-    render(){
-        const {
-            username,
-            posts
-        }= this.state
+useEffect(() => {
+    getData()
+    
+ }, [getData])
 
         if(!username){
             return (
@@ -54,15 +51,14 @@ getUser = async(id) => {
             <p> User: {username}</p>
             <p> Posts: {posts}</p>
 
+            <button onClick={logOut}>Logout</button>
+
             </div>
-
-
 
                 <Origami length={3}/>
             </PageWrapper>
       
        )
-}
 }
 
 export default ProfilePage

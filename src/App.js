@@ -1,50 +1,42 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import UserContext from './Context'
+import getCookie from './utils/cookie'
 
 
-class App extends Component {
-    constructor(props) {
-        super(props)
+const App = (props) => {
+    const [user, setUser] = useState(props.user ? {
+        ...props.user,
+        loggedIn: true
+      } : null)
+      const origamis = props.origami || []
 
-        this.state = {
-            loggedIn: false,
-            user:null
-        }
+
+    const logIn = (userObject) => {
+        setUser({
+            ...userObject,
+            loggedIn: true
+        })
+    }
+    
+    const logOut = () => {
+        document.cookie = "x-auth-token= ; expires = Thu, 01 Jan 1970 00:00:00 GMT"
+        setUser({
+            loggedIn: false
+        })
     }
 
-  logIn = (user) => {
-      this.setState({
-          loggedIn:true,
-          user
-      })
-  }
 
-  logOut = () => {
-      this.setState({
-          loggedIn: false,
-          user:null
-
-      })
-  }
-
-    render() {
-        const{
-            loggedIn,
-            user
-        }= this.state
-
-return(
+    return (
         <UserContext.Provider value={{
-            loggedIn,
             user,
-            logIn: this.logIn,
-            logOut: this.logOut
+            logIn,
+            logOut
         }}>
 
-            {this.props.children}
+            {props.children}
         </UserContext.Provider>
-)
-    }
+    )
+
 }
 
 export default App

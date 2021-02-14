@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import styles from './index.module.css'
 import PageWrapper from '../../components/page-wrapper'
 import Title from '../../components/title'
@@ -6,13 +6,12 @@ import Origami from '../../components/origami'
 import UserContext from '../../Context';
 
 
-class Publications extends Component {
-  static contextType= UserContext;
+const Publications =() => {
+ 
 
  
- render()  {
-    console.log(this.context)
-      return (
+ 
+        return (
       < PageWrapper>
           <Title title="Publications"/>
          <Origami/>   
@@ -20,7 +19,7 @@ class Publications extends Component {
     )
   }
 
-}
+
 
 
 
